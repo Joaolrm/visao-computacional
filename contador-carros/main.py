@@ -1,13 +1,23 @@
 import cv2
+import csv
+import pandas as pd
 
-# Constants
 
-# carregando o vídeo
+resultados = []
+
+# carregando os vídeos
 videos = [
     {
         "video": 'video_rodovia.mp4',
         "posicaoDaLinhaHorizontal": 200,
         "posicaoDaLinhaVertical": 280,
+        "ladoDesconsiderado": "esquerdo",
+        "contagemDeCarros": 0
+    },
+        {
+        "video": 'video_rodovia2.mp4',
+        "posicaoDaLinhaHorizontal": 300,
+        "posicaoDaLinhaVertical": 100,
         "ladoDesconsiderado": "esquerdo",
         "contagemDeCarros": 0
     }
@@ -68,5 +78,28 @@ for video in videos:
         if cv2.waitKey(30) & 0xFF == 27:
             break
 
+    fps = videoRodovia.get(cv2.CAP_PROP_FPS)
+    totalFrames = int(videoRodovia.get(cv2.CAP_PROP_FRAME_COUNT))
+    tempoTotal = totalFrames / fps
+
+    resultados.append({
+        "video": video["video"],
+        "carrosPorSegundo": video["contagemDeCarros"] / tempoTotal,
+        "totalDeCarros": video["contagemDeCarros"],
+        "tempoTotal": tempoTotal
+    })
+
     videoRodovia.release()
     cv2.destroyAllWindows()
+
+with open('resultados.csv', 'w', newline='') as csvfile:
+    fieldnames = ["video", "carrosPorSegundo", "totalDeCarros", "tempoTotal"]
+    writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+    writer.writeheader()
+    for resultado in resultados:
+        writer.writerow(resultado)
+
+df = pd.read_csv('resultados.csv')
+print(df)
+
+

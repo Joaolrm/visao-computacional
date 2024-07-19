@@ -1,3 +1,5 @@
 Autor: João Luís Rosa de Moura
 
-Projeto para gerar uma media de quuantos carros passam em uma mão da rodovia por segundo
+Este projeto faz a contagem dos carros que trafegam em um sentido da rodovia, estimando uma média.
+
+ele utiliza técnicas de visão computacional para processar os videos em frames e contar os veículos e armazena os resultados em um CSV
